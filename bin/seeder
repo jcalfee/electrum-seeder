@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+
+const read = require('read')
+const argv = require('yargs').usage(`
+Create or validate strong cryptographic brain seeds compatible with the Electrum wallet.
+
+> risk vendor delay snap layer cricket close venture sample undo fever mix
+
+The brain seed as a whole is versioned and checked and will detect out-of-place or missing words.  Suggested spelling corrections are provided.
+`)
+.example('$0 -c', 'Create a new random brain seed')
+.example('$0 -s', 'Validate an existing seed')
+.option('create', {describe: 'Create a new secure random brain seed', type: 'boolean', alias: 'c'})
+.option('seed', {describe: 'Provide brain seed of up to 12 words', type: 'string', alias: 's', default: null})
+.option('bits', {describe: 'Bit strength', type: 'number', alias: 'b', default: 132})
+.option('version', {describe: 'Specify brain seed version using 2 hex digits (lowercase)', type: 'string', alias: 'r', default: '01'})
+.option('language', {describe: 'language: chinese_simplified, chinese_traditional, english, french, italian, japanese, spanish', type: 'string', alias: 'l', default: 'english'})
+.option('no-suggest', {describe: 'Don\'t suggest correction to misspelled words in the brain seed', type: 'boolean', default: false})
+.help('help').alias('help', 'h').alias('help', '?')
+.argv
+
+const {randomBrainSeed, checkSeed} = require('..')
+const {suggest} = require('bip39-checker')
+
+const noSuggest = argv['no-suggest']
+const {language, bits} = argv
+
+const version = argv.version
+if (!/^[a-f0-9]{1,3}$/i.test(version)) {
+  console.error('Seed version should be up to 3 hex digits')
+  process.exit(1)
+}
+
+function assertValidSeed (seed) {
+  const cs = checkSeed(seed, {version, language})
+  if (cs.error) {
+    console.error(cs.error)
+    let oneSuggested = false // only show first suggestion (for security reasons)
+    if (!noSuggest) {
+      const words = seed.split(' ')
+      let idx = 0
+      for (const word of words) {
+        idx++
+        const suggestions = suggest(word)
+        if (suggestions === true) {
+                    // console.error(`Word ${idx} ok`);
+        } else if (!oneSuggested && suggestions !== true && suggestions.length) {
+          oneSuggested = true
+          console.error(`Word ${idx} suggestions: ${suggestions.join(', ')}`)
+        }
+      }
+    }
+    process.exit(1)
+  }
+}
+
+if (argv.create && argv.seed) {
+  console.error('WARNING: --create ignored (seed specified)')
+}
+
+if (argv.seed) {
+  assertValidSeed(argv.seed)
+  console.error('Seed is valid')
+  process.exit(0)
+}
+
+if (argv.create) {
+  randomBrainSeed({version, language, bits}, seed => {
+    console.log(seed)
+  })
+} else {
+  read({prompt: 'Brain seed: ', silent: true}, (err, s) => {
+    if (err || s.trim() === '') {
+      console.error('Try -? for help or -c to create')
+      process.exit(1)
+    }
+    assertValidSeed(s)
+    console.error('Seed is valid')
+  })
+}

@@ -1,0 +1,33 @@
+{
+  "name": "electrum-seeder",
+  "version": "1.0.0",
+  "description": "Create and validate Electrum compatible brain seeds.  Operates similar to bip39 except this uses a version instead of a checksum and allows for more flexibility in bit strength.",
+  "main": "src/index.js",
+  "bin": "bin/seeder",
+  "scripts": {
+    "test": "mocha index.test.js src/**/*.test.js",
+    "coverage": "istanbul cover _mocha -- -R spec index.test.js src/**/*.test.js",
+    "coveralls": "npm run coverage && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+  },
+  "author": "jcalfee",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jcalfee/seeder.git"
+  },
+  "dependencies": {
+    "bip39-checker": "^1.0.1",
+    "bn.js": "^4.11.6",
+    "create-hash": "^1.1.2",
+    "create-hmac": "^1.1.4",
+    "more-entropy": "^0.0.7",
+    "randombytes": "^2.0.3",
+    "read": "^1.0.7",
+    "yargs": "^7.1.0"
+  },
+  "devDependencies": {
+    "coveralls": "^2.13.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.3.0"
+  }
+}

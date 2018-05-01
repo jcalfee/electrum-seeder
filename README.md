@@ -16,7 +16,7 @@ Brain seeds are versioned.  This is done by testing a number of brain seeds are 
 
 ## Bip32
 
-Brain seeds are not Bip32, they will work in Electrum.  This package creates brain seeds using the BIP-0039 word lists.  Electrum brain seeds use a version instead of a checksum.  Also different from bip39 in that this offers finer grain bit strengths (bit strength does not need to be multiples of 32 bits or 4 words).
+Brain seeds are not bip39, they will work in Electrum.  This package creates brain seeds using the bip39 word lists.  Unlike bip39 seeds, electrum brain seeds use a version instead of a checksum and will validate even if created using a future language list.  Also different from bip39 in that this offers finer grain bit strengths (word count does not need to be multiples of 3).
 
 ## Command Line Interface
 

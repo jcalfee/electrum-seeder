@@ -13,7 +13,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jcalfee/seeder.git"
+    "url": "git://github.com/jcalfee/electrum-seeder.git"
   },
   "dependencies": {
     "bip39-checker": "^1.0.1",
@@ -26,7 +26,7 @@
     "yargs": "^7.1.0"
   },
   "devDependencies": {
-    "coveralls": "^2.13.1",
+    "coveralls": "^3.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.3.0"
   }
